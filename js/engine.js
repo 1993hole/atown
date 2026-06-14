@@ -89,11 +89,9 @@ function dismissTutorial(){ $('#tutorial').classList.remove('show'); $('#topbar'
 function setPortrait(src){
   const p=$('#scene-portrait'), img=p.querySelector('img');
   if(img.getAttribute('src')===src && p.classList.contains('show')) return;   // 같은 인물 → 유지
-  const wasShown = p.classList.contains('show');
-  p.classList.remove('show');                       // 페이드 아웃
-  const swap = ()=>{ img.src=src; setTimeout(()=> p.classList.add('show'), 30); };
-  if(wasShown) setTimeout(swap, 200); else swap();   // 인물 교체 시 잠깐 뒤 페이드 인
-  S.lastPortrait=src;
+  img.src = src;                                        // 항상 새 인물로 즉시 교체 (이전 인물 깜빡임 방지)
+  if(!p.classList.contains('show')) setTimeout(()=> p.classList.add('show'), 20);  // 숨김 상태에서 등장 → 페이드 인
+  S.lastPortrait = src;
 }
 function clearPortrait(){ $('#scene-portrait').classList.remove('show'); S.lastPortrait=null; }   /* 페이드 아웃(이미지는 opacity로 숨김) */
 
