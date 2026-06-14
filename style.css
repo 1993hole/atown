@@ -126,12 +126,12 @@ body{
 .portrait{
   position:absolute; left:clamp(1rem,5vw,4.5rem); bottom:clamp(.6rem,2vh,1.2rem);
   height:clamp(130px,30vh,260px); aspect-ratio:3/4;
-  opacity:0; transition:opacity .4s ease;
+  opacity:0;            /* transition은 .show에만 → 등장은 페이드, 사라짐은 즉시(잔상·검은 박스 방지) */
   pointer-events:none; z-index:10;
   border:1px solid #9E886F; box-shadow:0 10px 28px rgba(0,0,0,.6);
   background:#0f0d09;
 }
-.portrait.show{ opacity:1; }
+.portrait.show{ opacity:1; transition:opacity .35s ease; }
 .portrait img{ height:100%; width:100%; object-fit:cover; display:block; }
 
 /* 하단 대화창 (프레임 — 폰트 중간 크기) */

@@ -89,8 +89,12 @@ function dismissTutorial(){ $('#tutorial').classList.remove('show'); $('#topbar'
 function setPortrait(src){
   const p=$('#scene-portrait'), img=p.querySelector('img');
   if(img.getAttribute('src')===src && p.classList.contains('show')) return;   // 같은 인물 → 유지
-  img.src = src;                                        // 항상 새 인물로 즉시 교체 (이전 인물 깜빡임 방지)
-  if(!p.classList.contains('show')) setTimeout(()=> p.classList.add('show'), 20);  // 숨김 상태에서 등장 → 페이드 인
+  p.classList.remove('show');                  // 즉시 숨김(transition 없음) → 이전 이미지·검은 박스 잔상 제거
+  const reveal = ()=>{ if(img.getAttribute('src')===src) p.classList.add('show'); };  // 새 이미지 로드 후에만 페이드 인
+  img.onload = reveal;
+  img.src = src;
+  if(img.complete && img.naturalWidth) reveal();        // 이미 캐시된 경우 즉시
+  else setTimeout(reveal, 250);                          // 폴백: onload 누락 대비(로컬 이미지는 그 전에 로드됨)
   S.lastPortrait = src;
 }
 function clearPortrait(){ $('#scene-portrait').classList.remove('show'); S.lastPortrait=null; }   /* 대화 중 페이드 아웃(이미지 유지) */
