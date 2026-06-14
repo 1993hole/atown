@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>A Tale of Two Nights — 두 번의 밤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+
+  <!-- ════════ TITLE ════════ -->
+  <section id="sc-title" class="screen active">
+    <div class="title-grain"></div>
+    <div class="title-wrap">
+      <img class="title-logo" src="assets/ui/logo.png" alt="A Tale of Two Nights">
+      <div class="title-sub">두 번의 밤</div>
+      <div class="title-tag">Interactive Mystery · prototype</div>
+      <div class="title-divider"></div>
+      <nav class="title-menu">
+        <button class="btn" id="btn-start">시작하기</button>
+        <button class="btn off">불러오기</button>
+        <button class="btn off">설정</button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ════════ PROLOGUE (초대장) ════════ -->
+  <section id="sc-prologue" class="screen">
+    <div class="title-grain"></div>
+    <div class="pro-card">
+      <div class="pro-from">From. Greyburn Manor</div>
+      <p class="pro-text">
+        당신은 그레이번 저택으로부터 초대장을 받았습니다.<br><br>
+        <em>“10월 31일, 할로윈.<br>
+        평범한 일상의 껍데기를 벗어던질 시간입니다.<br>
+        그레이번 저택에서 열리는 파티에<br>
+        당신을 초대합니다.<br>
+        이 파티에서는 모든 가면이 허락됩니다.”</em><br><br>
+        — E. Blackwood
+      </p>
+      <div class="pro-q">초대에 응하시겠습니까?</div>
+      <div class="pro-btns">
+        <button class="pro-btn yes" id="btn-accept">응한다</button>
+        <button class="pro-btn no"  id="btn-decline">거절한다</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ NAME (이름 입력) ════════ -->
+  <section id="sc-name" class="screen">
+    <div class="title-grain"></div>
+    <div class="name-card">
+      <div class="name-hd">당신의 이름은?</div>
+      <div class="name-sd">오늘 밤, 파티에 참석하는 당신의 이름</div>
+      <input type="text" id="name-input" placeholder="이름을 입력하세요" maxlength="12" autocomplete="off">
+      <button class="name-ok" id="btn-enter">저택에 들어간다</button>
+    </div>
+  </section>
+
+  <!-- ════════ SCENE ════════ -->
+  <section id="sc-scene" class="screen">
+    <!-- 배경: 씬 전체를 덮음 (상단바·대화창이 이 위에 반투명으로 얹힘) -->
+    <div class="bg-layer" id="scene-bg"></div>
+    <!-- 상단바: 장소 · ACT · 아이콘 -->
+    <div id="topbar">
+      <div class="tb-loc" id="tb-loc">그레이번 저택</div>
+      <div class="tb-acts">
+        <span class="pip on" id="pip1" title="ACT 1">ACT I</span>
+        <span class="pip"    id="pip2" title="ACT 2">II</span>
+        <span class="pip"    id="pip3" title="ACT 3">III</span>
+      </div>
+      <div class="tb-icons">
+        <button class="ic-btn hidden" id="btn-notes" title="수사노트">수사노트</button>
+        <button class="ic-btn hidden" id="btn-inv"   title="단서">단서</button>
+      </div>
+    </div>
+    <!-- 목표바 -->
+    <div id="goal-bar">
+      <span class="goal-label">현재 목표</span>
+      <span class="goal-text" id="goal-text">—</span>
+      <span class="goal-prog" id="goal-prog"></span>
+    </div>
+    <!-- 무대 (투명 영역 — 포트레이트만, 배경은 위 전체 레이어) -->
+    <div id="stage">
+      <div class="portrait" id="scene-portrait"><img src="" alt=""></div>
+    </div>
+    <!-- 하단 대화창 -->
+    <div class="dialogue" id="dialogue">
+      <span class="dlg-name" id="dlg-name"></span>
+      <div class="dlg-text" id="dlg-text"></div>
+      <span class="dlg-hint">계속하려면 클릭 ▾</span>
+    </div>
+    <!-- 오버레이 -->
+    <div class="choices" id="choices" style="display:none"></div>
+    <div class="blackout" id="blackout"></div>
+
+    <!-- 튜토리얼 안내 (수사노트·단서 최초 활성화 시 1회) -->
+    <div id="tutorial">
+      <div class="tut-callout">
+        <div class="tut-arrow"></div>
+        <div class="tut-title">새로운 기능</div>
+        <p class="tut-row"><b>수사노트</b> — 지금까지 정리된 단서 기록을 볼 수 있어요.</p>
+        <p class="tut-row"><b>단서</b> — 획득한 증거를 모아 보는 곳이에요.</p>
+        <div class="tut-hint">화면을 클릭하면 계속됩니다</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ HUB ════════ -->
+  <section id="sc-hub" class="screen">
+    <div class="bg-layer" id="hub-bg"></div>
+    <div class="hub-veil"></div>
+    <div class="hub-wrap">
+      <div class="hub-title" id="hub-title">그레이번 저택</div>
+      <div class="hub-sub" id="hub-sub"></div>
+      <div class="hub-list" id="hub-list"></div>
+    </div>
+  </section>
+
+  <!-- ════════ CLUE FULLSCREEN ════════ -->
+  <div id="clue-overlay">
+    <div class="clue-label">단서 획득</div>
+    <img class="clue-img" id="clue-img" src="" alt="" style="display:none">
+    <div class="clue-title" id="clue-title"></div>
+    <div class="clue-desc" id="clue-desc"></div>
+    <div class="clue-hint">클릭하여 계속 ▼</div>
+  </div>
+
+  <!-- ════════ PANELS ════════ -->
+  <aside class="panel" id="panel-notes">
+    <div class="panel-head"><h3>수사 노트</h3><button class="panel-close" data-close="panel-notes">×</button></div>
+    <div class="panel-body" id="notes-body"></div>
+  </aside>
+  <aside class="panel" id="panel-inv">
+    <div class="panel-head"><h3>단서</h3><button class="panel-close" data-close="panel-inv">×</button></div>
+    <div class="panel-body"><div class="inv-grid" id="inv-grid"></div></div>
+  </aside>
+
+  <!-- ════════ ACT CARD ════════ -->
+  <div id="act-card">
+    <div class="act-card-label" id="act-card-label">END OF</div>
+    <div class="act-card-title" id="act-card-title">ACT 1</div>
+    <div class="act-card-msg" id="act-card-msg"></div>
+    <button class="btn" id="act-card-btn">계속</button>
+  </div>
+
+  <div id="loading">LOADING…</div>
+
+</div>
+<!-- 데이터 (file:// 더블클릭 대응 — fetch 대신 script 로드) -->
+<script src="data/characters.js"></script>
+<script src="data/clues.js"></script>
+<script src="data/act1.js"></script>
+<!-- <script src="data/act2.js"></script>  ← ACT2 데모 추가 시 주석 해제 -->
+<script src="js/engine.js"></script>
+</body>
+</html>
