@@ -93,7 +93,8 @@ function setPortrait(src){
   if(!p.classList.contains('show')) setTimeout(()=> p.classList.add('show'), 20);  // 숨김 상태에서 등장 → 페이드 인
   S.lastPortrait = src;
 }
-function clearPortrait(){ $('#scene-portrait').classList.remove('show'); S.lastPortrait=null; }   /* 페이드 아웃(이미지는 opacity로 숨김) */
+function clearPortrait(){ $('#scene-portrait').classList.remove('show'); S.lastPortrait=null; }   /* 대화 중 페이드 아웃(이미지 유지) */
+function hidePortraitInstant(){ const p=$('#scene-portrait'); p.classList.remove('show'); p.querySelector('img').removeAttribute('src'); S.lastPortrait=null; }   /* 씬 전환·접근 진입: 이미지 즉시 비움(옛 인물 잔상 방지) */
 
 /* ── act / scene flow ── */
 function resetState(){ S.talked=new Set(); S.clues=[]; S.notes=[]; S.goal=null; S.uiUnlocked=false; S.curLoc=null; S.tutorialShown=false;
@@ -107,7 +108,7 @@ function runScene(id){
   S.scene = id;
   S.beats = JSON.parse(JSON.stringify(sc.beats));   // clone (choices splice into it)
   S.i = 0;
-  clearPortrait();
+  hidePortraitInstant();
   $('#blackout').classList.remove('on');
   $('#choices').style.display='none';
   show('sc-scene');
@@ -196,7 +197,7 @@ function enterLocation(locId){
   S.curLoc = locId;
   const onScene = $('#sc-scene').classList.contains('active');   // 이미 씬이면 페이드, 허브에서 진입이면 즉시
   if(loc.bg){ (onScene ? setSceneBg : setSceneBgInstant)(loc.bg); updateLocation(loc.bg); }
-  clearPortrait();
+  hidePortraitInstant();
   show('sc-scene');
   renderNarration(`${loc.name}. 손님들이 여전히 대화를 나누고 있다.\n누구에게 다가갈까.`);
   const items = undone.map(t=>{ const c=CH[t.replace('talk_','')]||{name:t};
